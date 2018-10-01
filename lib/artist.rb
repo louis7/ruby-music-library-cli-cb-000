@@ -1,61 +1,60 @@
-
 class Artist
 
 extend Concerns::Findable
-extend MusicModule::ClassMethods
-include MusicModule::InstanceMethods
 
-attr_accessor :name, :songs
-@@all = []
-### class functions
-def self.all
-@@all
-end
+  attr_accessor :name
+  attr_reader :songs
 
-def self.destroy_all
-@@all.clear
-end
+  @@all = []
 
-def self.create (name_of_artist)
-@name = name_of_artist
-@@all << self
-return self
-end
+  def initialize(name)
+    @name = name
+    @songs = []
+  end
 
+  def self.all
+    @@all
+  end
 
-### instance methods
-def initialize (name)
-  @name = name
-  @songs = []
-##  song.artist= artist_object
-end
+  def self.destroy_all
+    @@all.clear
+  end
 
-def songs
-  @songs
-end
+  def save
+    @@all << self
+  end
 
-def add_song (song_object)
-    if song_object.artist == nil
-      song_object.artist = self
+  def self.create(artist)
+    new_artist = self.new(artist)
+    new_artist.save
+    new_artist
+  end
+
+  def songs
+    return @songs
+  end
+
+  def add_song(song)
+    if song.artist == nil
+      song.artist = self
     end
-    if !@songs.include?(song_object)
-      @songs<< song_object
+    if !@songs.include?(song)
+        @songs << song
     end
 
-end
-
-def save
-  @@all << self
-end
-
+  end
 
 def genres
-    @genres = []
-    songs.each{ |item| @genres << item.genre }
-     @genres.uniq
+#iterate over songs. take the genre from each song. put into array. return array
+  genres = []
+  @songs.each do |song|
+    if !genres.include?(song.genre)
+      genres << song.genre
+    end
+  end
+  return genres
+
 end
-
-
 
 
 end
